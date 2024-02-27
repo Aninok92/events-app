@@ -2,12 +2,13 @@ import { useRouter } from 'next/router';
 
 import EventsList from '../../components/events/events-list';
 import EventsSearchBox from '../../components/events/events-search';
-import { getAllEvents } from '../../dummy-data'
+import transformData from '../../helpers/transformData'
+import fetchData from '../../helpers/fetchData';
 
-function EventsPage() {
+
+export default function EventsPage(props) {
     const router = useRouter()
-    const events = getAllEvents();
-
+  
     function findEventsHandler(year, month) {
         const fullPath = `/events/${year}/${month}`
 
@@ -15,12 +16,21 @@ function EventsPage() {
         
     }
 
-
-
     return <div>
         <EventsSearchBox onSearch={findEventsHandler}/>
-        <EventsList items={events} />
+        <EventsList items={props.events} /> 
     </div>
 }
 
-export default EventsPage
+export async function getStaticProps() {
+   const data = await fetchData()
+
+   const events = transformData(data)
+
+    return {
+        props: {
+            events: events
+        },
+        revalidate: 10
+    }
+}

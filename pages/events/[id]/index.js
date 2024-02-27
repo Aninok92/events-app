@@ -1,15 +1,12 @@
-import { useRouter } from "next/router"
-
-import { getEventById } from '../../../dummy-data'
 import EventSummary from '../../../components/event-detail/event-summary'
 import EventLogistics from '../../../components/event-detail/event-logistics'
 import EventContent from '../../../components/event-detail/event-content'
 import Button from "../../../components/ui/button"
+import ErrorAlert from  "../../../components/ui/error-alert/error-alert"
+import fetchData from "../../../helpers/fetchData"
+import transformData from "../../../helpers/transformData"
 
-function EventPage() {
-    const router = useRouter()
-    const eventById = getEventById(router.query.id)
-   
+export default function EventPage({eventById}) {
     if(!eventById) {
         return (
             <>
@@ -37,4 +34,36 @@ function EventPage() {
     )
 }
 
-export default EventPage
+export async function getStaticProps({ params }) {
+    const eventId = params.id
+
+    const data = await fetchData()
+
+    const events = transformData(data);
+
+    const event = events.find(el => el.id === eventId)
+
+    if (!event) {
+        return { notFound: true };
+      }
+
+    return {
+        props: {
+            eventById: event
+        }
+    }
+}
+
+export async function getStaticPaths() {
+    const data = await fetchData()
+    const events = transformData(data);
+    console.log('data', data)
+
+    const ids = events.map((el) => el.id);
+    const pathsWithParams = ids.map((id) => ({ params: { id: id } }));
+
+    return {
+        paths: pathsWithParams,
+        fallback: true,
+      };
+}
