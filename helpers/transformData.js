@@ -1,12 +1,12 @@
 export default function transformData(data) {
-    const transformedEvents = [];
+  const transformedEvents = []
 
-    for (const key in data) {
-      transformedEvents.push({
-        id: key,
-        ...data[key]
-      });
-    }
+  for (const key in data) {
+    transformedEvents.push({
+      id: key,
+      ...data[key],
+    })
+  }
 
-    return transformedEvents
+  return transformedEvents
 }

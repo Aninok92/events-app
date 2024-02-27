@@ -1,36 +1,36 @@
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/router'
 
-import EventsList from '../../components/events/events-list';
-import EventsSearchBox from '../../components/events/events-search';
+import EventsList from '../../components/events/events-list'
+import EventsSearchBox from '../../components/events/events-search'
 import transformData from '../../helpers/transformData'
-import fetchData from '../../helpers/fetchData';
-
+import fetchData from '../../helpers/fetchData'
 
 export default function EventsPage({ events }) {
-    const router = useRouter()
-  
-    function findEventsHandler(year, month) {
-        const fullPath = `/events/${year}/${month}`
+  const router = useRouter()
 
-        router.push(fullPath)
-        
-    }
+  function findEventsHandler(year, month) {
+    const fullPath = `/events/${year}/${month}`
 
-    return <div>
-        <EventsSearchBox onSearch={findEventsHandler}/>
-        <EventsList items={events} /> 
+    router.push(fullPath)
+  }
+
+  return (
+    <div>
+      <EventsSearchBox onSearch={findEventsHandler} />
+      <EventsList items={events} />
     </div>
+  )
 }
 
 export async function getStaticProps() {
-   const data = await fetchData()
+  const data = await fetchData()
 
-   const events = transformData(data)
+  const events = transformData(data)
 
-    return {
-        props: {
-            events: events
-        },
-        revalidate: 10
-    }
+  return {
+    props: {
+      events: events,
+    },
+    revalidate: 10,
+  }
 }
