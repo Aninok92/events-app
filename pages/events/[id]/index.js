@@ -50,20 +50,20 @@ export async function getStaticProps({ params }) {
     return {
         props: {
             eventById: event
-        }
+        },
+        revalidate: 10
     }
 }
 
 export async function getStaticPaths() {
     const data = await fetchData()
     const events = transformData(data);
-    console.log('data', data)
 
     const ids = events.map((el) => el.id);
-    const pathsWithParams = ids.map((id) => ({ params: { id: id } }));
+    const pathsWithParams = ids.map((id) => ({ params: { id } }));
 
     return {
         paths: pathsWithParams,
-        fallback: true,
+        fallback: false,
       };
 }

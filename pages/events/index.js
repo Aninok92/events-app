@@ -6,7 +6,7 @@ import transformData from '../../helpers/transformData'
 import fetchData from '../../helpers/fetchData';
 
 
-export default function EventsPage(props) {
+export default function EventsPage({ events }) {
     const router = useRouter()
   
     function findEventsHandler(year, month) {
@@ -18,7 +18,7 @@ export default function EventsPage(props) {
 
     return <div>
         <EventsSearchBox onSearch={findEventsHandler}/>
-        <EventsList items={props.events} /> 
+        <EventsList items={events} /> 
     </div>
 }
 

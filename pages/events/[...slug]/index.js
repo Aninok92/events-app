@@ -1,6 +1,3 @@
-import { useRouter } from "next/router"
-
-import { getFilteredEvents } from "../../../dummy-data"
 import EventsList from "../../../components/events/events-list"
 import ResultsTitle from "../../../components/events/results-title/results-title"
 import ErrorAlert from "../../../components/ui/error-alert/error-alert"
@@ -45,7 +42,7 @@ export default function FilteredEvents({filteredEvents, numYear, numMonth}) {
         )
     }
 
-   const date = new Date(numYear, numMonth)
+   const date = new Date(numYear, numMonth - 1)
 
     return (
         <>
@@ -56,7 +53,7 @@ export default function FilteredEvents({filteredEvents, numYear, numMonth}) {
 }
 
 export async function getServerSideProps(context) {
-    const { params, req, res } = context;
+    const { params } = context;
     const data = await fetchData()
  
     const events = transformData(data)
