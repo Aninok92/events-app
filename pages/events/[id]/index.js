@@ -3,6 +3,7 @@ import EventLogistics from '../../../components/event-detail/event-logistics'
 import EventContent from '../../../components/event-detail/event-content'
 import Button from '../../../components/ui/button'
 import ErrorAlert from '../../../components/ui/error-alert/error-alert'
+import Comments from '../../../components/input/comments'
 import fetchData from '../../../helpers/fetchData'
 import transformData from '../../../helpers/transformData'
 
@@ -32,6 +33,7 @@ export default function EventPage({ eventById }) {
       <EventContent>
         <p>{eventById.description}</p>
       </EventContent>
+      <Comments eventId={eventById.id} />
     </>
   )
 }
