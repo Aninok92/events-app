@@ -6,10 +6,6 @@ import fetchData from '../../../helpers/fetchData'
 import transformData from '../../../helpers/transformData'
 
 export default function FilteredEvents({ filteredEvents, numYear, numMonth }) {
-//   if (!numYear && !numMonth) {
-//     return <p className="center">Loading...</p>
-//   }
-
   if (
     isNaN(numYear) ||
     isNaN(numMonth) ||
