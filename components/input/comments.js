@@ -15,14 +15,15 @@ function Comments(props) {
   }
 
  useEffect(() => {
-  fetch(`/api/comment/${eventId}`)
-  .then((response) => response.json())
-  .then((data) => {
-    setCommentData(data.comment);
-    console.log('data', data.comment);
-  })
-  
- }, [])
+  if(showComments) {
+    fetch(`/api/comment/${eventId}`)
+    .then((response) => response.json())
+    .then((data) => {
+      setCommentData(data.comment);
+      console.log('data', data.comment);
+    })
+  }
+ }, [showComments])
 
   function addCommentHandler(commentData) {
     fetch(`/api/comment/${eventId}`, {

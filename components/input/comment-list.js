@@ -2,16 +2,16 @@ import classes from './comment-list.module.css';
 
 function CommentList({commentData}) {
   return (
-   commentData.length > 0 && commentData.map(el => {
-      return <ul className={classes.comments}>
-      <li>
+<ul className={classes.comments}>
+  { commentData.length > 0 && commentData.map(el => (
+     <li key={el._id}>
         <p>{el.text}</p>
         <div>
           By <address>{el.name}</address>
         </div>
-      </li>
-    </ul>
-    })
+      </li>  
+    ))}
+     </ul>
   );
 }
 

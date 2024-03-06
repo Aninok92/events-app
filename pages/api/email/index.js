@@ -1,4 +1,5 @@
 import fs from 'fs'
+import { MongoClient } from 'mongodb'
 import path from 'path'
 
 export function buildEmailPath() {
@@ -11,24 +12,45 @@ export function extractEmail(filePath) {
     return data
 }
 
-function handler(req, res) {
+const PASSWORD = 'k7qH3VAqsw1jJgzB';
+
+async function connectDB() {
+    const client = await MongoClient.connect(`mongodb+srv://aninok92:${PASSWORD}@cluster0.zuo7ept.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`)
+    return client
+}
+
+async function insertDocyment(client, document) {
+    const db = client.db('events');
+
+    await db.collection('newsletter').insertOne(document)
+}
+
+async function handler(req, res) {
     if(req.method === "POST") {
     const email = req.body.email
-    
 
-    const newEmail = {
-        id: new Date().toISOString(),
-        email: email
+    if(!email || !email.includes('@')) {
+        res.status(422).json({ message: 'Invalid email adress' })
+        return;
     }
 
-    const filePath = buildEmailPath();
-    const data = extractEmail(filePath);
-    data.push(newEmail);
+    let client
+    const newEmail = { email: email }
+    try {
+        client = await connectDB()
+    } catch(err) {
+        res.status(500).json({ message: 'Connecting to database failed'})
+    }
 
-    console.log('filePath', filePath)
-
-    fs.writeFileSync(filePath, JSON.stringify(data));
-    res.status(201).json({ message: 'Success', email: newEmail })
+    try {
+        await insertDocyment(client, newEmail)
+        client.close()
+    } catch(err) {
+        res.status(500).json({ message: 'Inserting data failed'})
+    }
+   
+   newEmail.id = result.insertedId 
+   res.status(201).json({ message: 'Success', email: newEmail } )
 }
 }
 
