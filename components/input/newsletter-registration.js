@@ -1,12 +1,12 @@
-import { useRef } from 'react';
-import classes from './newsletter-registration.module.css';
+import { useRef } from 'react'
+import classes from './newsletter-registration.module.css'
 
 function NewsletterRegistration() {
   const emailInputRef = useRef()
 
   function registrationHandler(event) {
-    event.preventDefault();
- 
+    event.preventDefault()
+
     const enteredEmail = emailInputRef.current.value
 
     const reqBody = { email: enteredEmail }
@@ -15,9 +15,11 @@ function NewsletterRegistration() {
       method: 'POST',
       body: JSON.stringify(reqBody),
       headers: {
-        'Content-type': 'application/json'
-      }
-    }).then((res) => res.json()).then((data) => console.log(data))
+        'Content-type': 'application/json',
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => console.log(data))
   }
 
   return (
@@ -26,17 +28,17 @@ function NewsletterRegistration() {
       <form onSubmit={registrationHandler}>
         <div className={classes.control}>
           <input
-            type='email'
-            id='email'
-            placeholder='Your email'
-            aria-label='Your email'
+            type="email"
+            id="email"
+            placeholder="Your email"
+            aria-label="Your email"
             ref={emailInputRef}
           />
           <button>Register</button>
         </div>
       </form>
     </section>
-  );
+  )
 }
 
-export default NewsletterRegistration;
+export default NewsletterRegistration

@@ -1,42 +1,70 @@
-import { MongoClient } from 'mongodb'
-
-const PASSWORD = 'k7qH3VAqsw1jJgzB';
+import {
+  connectDB,
+  insertDocyment,
+  getAllDocuments,
+} from '../../../helpers/db-util'
 
 async function handler(req, res) {
-    const eventId = req.query.comment
+  const eventId = req.query.eventId
+  let client
+  try {
+    client = await connectDB()
+  } catch (err) {
+    res.status(500).json({ message: 'Connecting to database failed' })
+    return
+  }
 
-    const client = await MongoClient.connect(`mongodb+srv://aninok92:${PASSWORD}@cluster0.zuo7ept.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`)
+  if (req.method === 'POST') {
+    const email = req.body.email
+    const name = req.body.name
+    const text = req.body.text
 
-    if (req.method === 'POST') {
-        const email = req.body.email
-        const name = req.body.name
-        const text = req.body.text
+    if (
+      !email.includes('a') ||
+      !name ||
+      !text ||
+      !name.trim() === '' ||
+      !text.trim() === ''
+    ) {
+      res.status(422).json({ message: 'Invalid input' })
+      return
+    }
 
-        if(!email.includes('a') || !name || !text || !name.trim() === '' || !text.trim() === '') {
-            res.status(422).json({ message: 'Invalid input'})
-            return
-        }
+    const newComment = {
+      email,
+      name,
+      text,
+      eventId,
+    }
 
-        const newComment = {
-            email,
-            name,
-            text,
-            eventId
-        }
+    let result
 
-        const db = client.db('events');
+    try {
+      result = await insertDocyment(client, 'events', 'comments', newComment)
+      client.close()
+    } catch (err) {
+      res.status(500).json({ message: 'Inserting data failed' })
+      return
+    }
 
-        const result = await db.collection('comments').insertOne(newComment)
+    newComment.id = result.insertedId
 
-        newComment.id = result.insertedId 
+    res.status(201).json({ message: 'Success!', comment: newComment })
+  }
 
-        client.close()
-        res.status(201).json({ message: 'Success!', comment: newComment });
-    } 
-    const db = client.db('events');
+  if (req.method === 'GET') {
+    let result
 
-    const documents = await db.collection('comments').find().sort({_id: -1}).toArray()
-    res.status(200).json({comment: documents})
+    try {
+      result = await getAllDocuments(client, 'events', 'comments', { _id: -1 }, { eventId })
+      client.close()
+    } catch (err) {
+      res.status(500).json({ message: 'Inserting data failed' })
+      return
+    }
+    
+    res.status(200).json({ comment: result })
+  }
 }
 
 export default handler
