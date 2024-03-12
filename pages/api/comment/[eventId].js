@@ -4,13 +4,15 @@ import {
   getAllDocuments,
 } from '../../../helpers/db-util'
 
+import { errorResponse } from '../../../helpers/error-response-utils'
+
 async function handler(req, res) {
   const eventId = req.query.eventId
   let client
   try {
     client = await connectDB()
   } catch (err) {
-    res.status(500).json({ message: 'Connecting to database failed' })
+    errorResponse(res, 500, 'Connecting to database failed')
     return
   }
 
@@ -26,7 +28,7 @@ async function handler(req, res) {
       !name.trim() === '' ||
       !text.trim() === ''
     ) {
-      res.status(422).json({ message: 'Invalid input' })
+      errorResponse(res, 422, 'Invalid input')
       return
     }
 
@@ -43,7 +45,7 @@ async function handler(req, res) {
       result = await insertDocyment(client, 'events', 'comments', newComment)
       client.close()
     } catch (err) {
-      res.status(500).json({ message: 'Inserting data failed' })
+      errorResponse(res)
       return
     }
 
@@ -59,7 +61,7 @@ async function handler(req, res) {
       result = await getAllDocuments(client, 'events', 'comments', { _id: -1 }, { eventId })
       client.close()
     } catch (err) {
-      res.status(500).json({ message: 'Inserting data failed' })
+      errorResponse(res)
       return
     }
     

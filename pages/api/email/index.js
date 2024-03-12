@@ -1,23 +1,12 @@
-import fs from 'fs'
-import path from 'path'
 import { connectDB, insertDocyment } from '../../../helpers/db-util'
-
-export function buildEmailPath() {
-  return path.join(process.cwd(), 'email.json')
-}
-
-export function extractEmail(filePath) {
-  const fileData = fs.readFileSync(filePath)
-  const data = JSON.parse(fileData)
-  return data
-}
+import { errorResponse } from '../../../helpers/error-response-utils'
 
 async function handler(req, res) {
   if (req.method === 'POST') {
     const email = req.body.email
 
     if (!email || !email.includes('@')) {
-      res.status(422).json({ message: 'Invalid email adress' })
+      errorResponse(res, 422, 'Invalid email adress')
       return
     }
 
@@ -26,7 +15,7 @@ async function handler(req, res) {
     try {
       client = await connectDB()
     } catch (err) {
-      res.status(500).json({ message: 'Connecting to database failed' })
+      errorResponse(res, 500, 'Connecting to database failed')
       return
     }
 
@@ -36,7 +25,7 @@ async function handler(req, res) {
       result = await insertDocyment(client, 'events', 'newsletter', newEmail)
       client.close()
     } catch (err) {
-      res.status(500).json({ message: 'Inserting data failed' })
+      errorResponse(res)
       return
     }
 
