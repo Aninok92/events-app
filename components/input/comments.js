@@ -4,8 +4,7 @@ import CommentList from './comment-list'
 import NewComment from './new-comment'
 import classes from './comments.module.css'
 
-function Comments(props) {
-  const { eventId } = props
+function Comments({ eventId }) {
   const [commentData, setCommentData] = useState([])
 
   const [showComments, setShowComments] = useState(false)

@@ -3,7 +3,6 @@ import {
   insertDocyment,
   getAllDocuments,
 } from '../../../helpers/db-util'
-
 import { errorResponse } from '../../../helpers/error-response-utils'
 
 async function handler(req, res) {

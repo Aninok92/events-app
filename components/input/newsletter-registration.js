@@ -1,4 +1,5 @@
 import { useRef, useContext } from 'react'
+
 import classes from './newsletter-registration.module.css'
 import NotificationContext from '../../store/notification-context'
 

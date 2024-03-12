@@ -7,8 +7,6 @@ export default function EventsSearchBox({ onSearch }) {
   const yearInputRef = useRef()
   const monthInputRef = useRef()
 
-  console.log(yearInputRef)
-
   function submitHander(e) {
     e.preventDefault()
 
