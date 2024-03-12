@@ -58,13 +58,19 @@ async function handler(req, res) {
     let result
 
     try {
-      result = await getAllDocuments(client, 'events', 'comments', { _id: -1 }, { eventId })
+      result = await getAllDocuments(
+        client,
+        'events',
+        'comments',
+        { _id: -1 },
+        { eventId },
+      )
       client.close()
     } catch (err) {
       errorResponse(res)
       return
     }
-    
+
     res.status(200).json({ comment: result })
   }
 }
